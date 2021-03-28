@@ -24,33 +24,32 @@ class GouvAddressController extends AbstractController
    *     }
    *   )
    */
-  public function getAddressFromGouv(Request $request, AddressSearcher $searcher) {
+    public function getAddressFromGouv(Request $request, AddressSearcher $searcher)
+    {
 
-    // Check if the string to search is set
-    if ($request->query->get('adresse')) {
+        // Check if the string to search is set
+        if ($request->query->get('adresse')) {
 
-      // Collect data to persist entity
-      $search = $request->query->get('adresse');
-      $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
-      $date = new \DateTime('NOW');
+            // Collect data to persist entity
+            $search = $request->query->get('adresse');
+            $ip = $this->container->get('request_stack')->getCurrentRequest()->getClientIp();
+            $date = new \DateTime('NOW');
 
-      // Log request data
-      $em = $this->getDoctrine()->getManager();
-      $log = new AddressCallLog();
-      $log->setIP($ip);
-      $log->setDate($date);
-      $log->setSearch($search);
-      $em->persist($log);
-      $em->flush();
+            // Log request data
+            $em = $this->getDoctrine()->getManager();
+            $log = new AddressCallLog();
+            $log->setIP($ip);
+            $log->setDate($date);
+            $log->setSearch($search);
+            $em->persist($log);
+            $em->flush();
 
-      // Service to get the list of addresses related to $search string
-      $address_list = $searcher->getJsonAddress($search);
+            // Service to get the list of addresses related to $search string
+            $address_list = $searcher->getJsonAddress($search);
 
-      return new JsonResponse($address_list);
+            return new JsonResponse($address_list);
+        } else {
+            return new JsonResponse('No argument has been passed to the request. Please provide it to execute the search.');
+        }
     }
-    else {
-      return new JsonResponse('No argument has been passed to the request. Please provide it to execute the search.');
-    }
-  }
-
 }
