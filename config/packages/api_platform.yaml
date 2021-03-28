@@ -1,4 +1,6 @@
 api_platform:
+    title: 'ECHOS REST API'
+    description: 'REST API For SF test'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:
